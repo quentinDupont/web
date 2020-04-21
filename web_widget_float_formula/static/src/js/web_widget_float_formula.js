@@ -10,15 +10,15 @@ odoo.define('web.web_widget_float_formula', function(require) {
     var core = require('web.core');
     var basic_fields = require('web.basic_fields');
     var field_utils = require('web.field_utils');
-    var NumericField = basic_fields.FieldFloat;
+    var FieldFloat = basic_fields.FieldFloat;
 
-    NumericField.include({
+    FieldFloat.include({
         _formula_text: '',
 
         events: _.extend({
             "blur": "_compute_result",
             "focus": "_display_formula",
-        }, NumericField.prototype.events),
+        }, FieldFloat.prototype.events),
 
         commitChanges: function() {
             this._compute_result();
@@ -34,7 +34,7 @@ odoo.define('web.web_widget_float_formula', function(require) {
             } catch (ex) {
                 return false;
             }
-            var clean_formula = formula.toString().replace(/^\s+|\s+$/g, '');
+            var clean_formula = formula.toString().trim();
             if (clean_formula[0] === '=') {
                 clean_formula = clean_formula.substring(1);
                 var myreg = new RegExp('[0-9]|\\s|\\.|,|\\(|\\)|\\+|\\-|\\*|\\/', 'g');
@@ -52,13 +52,18 @@ odoo.define('web.web_widget_float_formula', function(require) {
             var thousands_sep = translation_params.thousands_sep;
 
             var value;
+            if (decimal_point !== '.') {
+                while (formula.indexOf(decimal_point) !== -1) {
+                    formula = formula.replace(decimal_point, '.');
+                }
+            }
             formula = formula.replace(thousands_sep, '').replace(decimal_point, '.');
             try {
                 value = eval(formula);
             }
             catch(e) {}
 
-            if (typeof value != 'undefined') {
+            if (typeof value !== 'undefined') {
                 return value;
             }
             return false;
