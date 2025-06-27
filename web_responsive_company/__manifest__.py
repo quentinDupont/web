@@ -12,12 +12,13 @@
     "license": "LGPL-3",
     "installable": True,
     "depends": ["web_responsive"],
-    "data": [
-        "views/assets.xml",
-    ],
-    "qweb": [
-        "static/src/xml/web_responsive_company.xml",
-    ],
+    "assets": {
+        "web.assets_backend": [
+            "/web_responsive_company/static/src/js/web_responsive_company.esm.js",
+            "/web_responsive_company/static/src/scss/web_responsive_company.scss",
+            "/web_responsive_company/static/src/xml/web_responsive_company.xml",
+        ],
+    },
     "demo": [
         "demo/res_groups.xml",
         "demo/res_company.xml",

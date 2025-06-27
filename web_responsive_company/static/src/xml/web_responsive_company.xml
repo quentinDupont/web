@@ -1,99 +1,105 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-    Copyright (C) 2021 - Today: GRAP (http://www.grap.coop)
-    @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
-    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
--->
-<template>
+<templates xml:space="preserve">
 
-    <t t-extend="SwitchCompanyMenu">
 
-        <!-- Add Access Key -->
-       <t t-jquery="a.dropdown-toggle" t-operation="attributes">
-            <attribute name="accesskey">y</attribute>
+<!-- Add accesskey + Appear on small screen too -->
+<t t-name="web.SwitchCompanyMenu" owl="1">
+    <Dropdown class="'o_switch_company_menu'" position="'bottom-end'">
+        <!-- Toggler -->
+        <t t-set-slot="toggler" t-on-click="_onClickToggler">
+            <i class="fa fa-building d-lg-none" accesskey="y" />
+            <span
+                    class="oe_topbar_name d-none d-lg-block"
+                    accesskey="y"
+                    t-esc="currentCompany.name"
+                />
         </t>
 
-        <t t-jquery=".dropdown-menu" t-operation="append">
+        <!-- Search bar -->
+        <div class="search-bar">
+            <span class="fa fa-search search-icon" />
+            <input
+                    id="search-input"
+                    type="search"
+                    t-ref="SearchBarInput"
+                    t-on-input="_searchCompanies"
+                    t-on-keydown="_onKeyDownSearchInput"
+                    placeholder="Search companies..."
+                    class="form-control"
+                />
+        </div>
 
-            <!-- Search part -->
-            <div class="search-container form-row align-items-center mb-4 col-12">
-                <div class="search-input col-md-10 ml-auto mr-auto mb-2">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <i class="fa fa-search" />
-                            </div>
-                        </div>
-                        <input
-                            type="search"
-                            autocomplete="off"
-                            placeholder="Search company..."
-                            class="form-control"
-                        />
-                    </div>
-                </div>
-                <div class="search-results col-md-10 ml-auto mr-auto" />
-            </div>
-
-            <!-- Kanban companies list -->
-            <t t-foreach="widget.getCompanies()" t-as="company">
-                <t t-call="web_responsive_company.CompanyIcon" />
+        <!-- All or filtered companies -->
+        <t
+                t-foreach="state.results"
+                class="search-results"
+                t-as="company"
+                t-key="company.id"
+            >
+            <t t-call="web.SwitchCompanyItem">
+                <t t-set="company" t-value="company" />
             </t>
         </t>
-    </t>
+    </Dropdown>
+</t>
 
-    <!-- Separate Company icon template, for easier inheritance -->
-    <t t-name="web_responsive_company.CompanyIcon">
-        <a
-            role="menuitem"
-            data-menu="company"
-            t-att-data-company-id="company.id"
-            t-attf-class="dropdown-item o-company o-company-selected-#{widget.isCurrentCompany(company) ? 'yes' : 'no'}"
+
+<t t-name="web.SwitchCompanyItem" owl="1">
+
+  <t t-set="isCompanySelected" t-value="selectedCompanies.includes(company.id)" />
+  <t t-set="isCurrent" t-value="company.id === companyService.currentCompany.id" />
+  <DropdownItem
+            class="'card company-card ' + (selectedCompanies.includes(company.id) ? ' company-selected ' : '') + (company.id === companyService.currentCompany.id ? 'company-current ' : '')"
+            t-on-keydown="ev => this._onKeyDownCompanyCard(ev, company.id)"
+            t-on-click.stop="() => this.toggleCompany(company.id)"
         >
-            <div class="o-company-logo-container">
-                <img
-                    class="o-company-logo-img"
-                    t-attf-src="/web/image?model=res.company&amp;field=logo_web&amp;id=#{company.id}"
-                />
-            </div>
-            <div class="o-company-code" t-if="company.code">
-                <t t-esc="company.code" />
-            </div>
-            <div class="o-company-name">
-                 <t t-esc="company.name" />
-            </div>
-        </a>
-    </t>
 
-   <!-- A search result -->
-    <t t-name="web_responsive_company.CompanySearchResults">
-        <t t-foreach="results" t-as="result">
-            <t t-set="company" t-value="widget._companyInfo(result.original)" />
-            <a
-                t-attf-class="o-menu-search-result dropdown-item col-12 ml-auto mr-auto #{result_first ? 'active' : ''}"
+    <!-- Checkbox -->
+    <div
+                role="menuitemcheckbox"
+                t-att-aria-checked="isCompanySelected ? 'true' : 'false'"
+                t-att-aria-label="company.name"
+                t-att-title="(isCompanySelected ? 'Unselect ' : 'Select ') + company.name + ' content.'"
+                tabindex="0"
+                class="border-end toggle_company"
+                t-on-click.stop="() => this.toggleCompany(company.id)"
+                z-index="2000"
+            >
+
+        <span class="">
+           <i
+                        class="fa fa-fw"
+                        t-att-class="isCurrent ? 'fa-check-circle text-success' : (isCompanySelected ? 'fa-check-circle-o text-primary' : 'fa-circle-o')"
+                    />
+        </span>
+    </div>
+
+    <!-- Card -->
+    <div
+                class="company-card-body"
+                data-menu="company"
                 t-att-data-company-id="company.id"
-                t-raw="result.string"
-            />
-        </t>
-    </t>
+                t-att-title="'Switch to ' + company.name"
+                t-on-click.stop="() => this.logIntoCompany(company.id)"
+            >
+      <img
+                    class="card-body-img img-fluid"
+                    t-att-src="'/web/image?model=res.company&amp;field=logo&amp;id=' + company.id"
+                    alt="Logo"
+                />
+    </div>
 
-   <!-- Add new shortcuts in Shortcuts summary -->
-    <t t-extend="UserMenu.shortcuts">
-        <t t-jquery=".o_shortcut_table tbody" t-operation="append">
-            <tr>
-                <td align="left">Change company</td>
-                <td>
-                    <span class="o_key">Alt</span> + <span
-                        class="o_key"
-                    >Shift</span> + <span class="o_key">y</span>
-                </td>
-                <td>
-                    <span class="o_key">Control</span> + <span
-                        class="o_key"
-                    >Alt</span> + <span class="o_key">y</span>
-                </td>
-            </tr>
-        </t>
-    </t>
+    <div
+                role="button"
+                class="log_into"
+                t-att-class="isCurrent ? 'alert-primary fw-bold' : 'btn btn-light border-0'"
+                t-att-title="'Switch to ' + company.name"
+                t-on-click="() => this.logIntoCompany(company.id)"
+            >
+        <span class="company_label" t-esc="company.name" />
+    </div>
 
-</template>
+  </DropdownItem>
+</t>
+
+</templates>

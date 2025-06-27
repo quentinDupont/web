@@ -17,13 +17,13 @@ Web Responsive - Company Menu
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fweb-lightgray.png?logo=github
-    :target: https://github.com/OCA/web/tree/12.0/web_responsive_company
+    :target: https://github.com/OCA/web/tree/16.0/web_responsive_company
     :alt: OCA/web
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/web-12-0/web-12-0-web_responsive_company
+    :target: https://translation.odoo-community.org/projects/web-16-0/web-16-0-web_responsive_company
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/web&target_branch=12.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/web&target_branch=16.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -37,38 +37,31 @@ It is usefull only if you have an Odoo Instance, with a lot of companies.
 .. contents::
    :local:
 
-Installation
-============
-
-if the OCA module ``res_company_code`` (OCA module present in the
-multi-company repository) is installed, the search will be done
-also on the company codes.
-
-Ref : https://github.com/OCA/multi-company/tree/12.0/res_company_code
-
 Usage
 =====
 
-* click on the current company name
+* Click on the current company name
 
 * The list of the companies are now displayed with the logo and the code (if defined), and there are ordered by complete name. (code and name)
 
-.. figure:: https://raw.githubusercontent.com/OCA/web/12.0/web_responsive_company/static/description/company_menu.png
+.. figure:: https://raw.githubusercontent.com/OCA/web/16.0/web_responsive_company/static/description/company_menu.png
 
-* It is also possible to search by complete name, in the same way as for the menus.
+* It is also possible to search by name, with a fuzzy search.
 
-.. figure:: https://raw.githubusercontent.com/OCA/web/12.0/web_responsive_company/static/description/company_menu_search.png
+.. figure:: https://raw.githubusercontent.com/OCA/web/16.0/web_responsive_company/static/description/company_menu_fuzzy_search.png
 
-**Note** : A new access key is available on 'Y' to switch company.
-
-.. figure:: https://raw.githubusercontent.com/OCA/web/12.0/web_responsive_company/static/description/shortcut.png
+Other features :
+- a new access key is available on 'Y' to display company menu.
+- navigate with keyboard 'Arrow down', 'Arrow up' and 'Tab'
+- toggle company off/on with 'Space' and log in with 'Enter'
+- escape fullscreen with 'Escape'
+- selected companies have a check mark
+- logged in company has a green check mark and a green border 
 
 Known issues / Roadmap
 ======================
 
-In V13+, the current company of the user is a many2many fields.
-So the UI of this module should be highly refactored, introducing checkboxes
-to work in more recent version.
+Handling focus on search bar might be improved with better JS knowledge.
 
 Bug Tracker
 ===========
@@ -76,7 +69,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/web/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/web/issues/new?body=module:%20web_responsive_company%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/web/issues/new?body=module:%20web_responsive_company%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -92,6 +85,7 @@ Contributors
 ~~~~~~~~~~~~
 
 * Sylvain LE GAL (https://www.twitter.com/legalsylvain)
+* Quentin DUPONT (quentin.dupont@grap.coop)
 
 Part of the code comes from ``web_responsive`` module, and has been adapted.
 
@@ -108,6 +102,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/web <https://github.com/OCA/web/tree/12.0/web_responsive_company>`_ project on GitHub.
+This module is part of the `OCA/web <https://github.com/OCA/web/tree/16.0/web_responsive_company>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
